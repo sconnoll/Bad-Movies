@@ -44,7 +44,6 @@ app.get("/genres", function(req, res) {
   // make an axios request to get the official list of genres from themoviedb
   getGenres()
     .then(({ data }) => {
-      console.log({ data });
       res.status(201).send({ data });
     })
     .catch(err => {
