@@ -1,4 +1,4 @@
-const movieModel = require('../models/movieModel.js');
+/*const movieModel = require('../models/movieModel.js');
 const apiHelpers = require('../helpers/apiHelpers.js');
 
 //Return requests to the client
@@ -28,4 +28,4 @@ module.exports = {
   deleteMovie: (req, res) => {
 
   }
-}
+}*/

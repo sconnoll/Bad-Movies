@@ -1,5 +1,8 @@
 var express = require("express");
 var bodyParser = require("body-parser");
+var db = require(".././db/sql/index.js");
+var { createFavorite, deleteFavorite } = require("./models/movieModel.js");
+var { getGenres, getMovies } = require("./helpers/apiHelpers.js");
 var request = require("request");
 var app = express();
 
@@ -39,21 +42,49 @@ Use the routes below to build your application:
 
 app.get("/genres", function(req, res) {
   // make an axios request to get the official list of genres from themoviedb
-  // use this endpoint. you will need your API key from signup: https://api.themoviedb.org/3/genre/movie/list
+  getGenres()
+    .then(({ data }) => {
+      console.log({ data });
+      res.status(201).send({ data });
+    })
+    .catch(err => {
+      console.log('there was an error getting the genres from the api', err);
+      res.sendStatus(500);
+    })
 });
 
 app.get("/search", function(req, res) {
-  // use this endpoint to search for movies by genres (using API key): https://api.themoviedb.org/3/discover/movie
   // and sort them by votes (worst first) using the search parameters in themoviedb API
-  // do NOT save the results into the database; render results directly on the page
+  getMovies(req.body.genre)
+    .then((results) => {
+      res.status(201).send({ data });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.sendStatus(500);
+    })
 });
 
 app.post("/save", function(req, res) {
   //save movie as favorite into the database
+  createFavorite(req.body.movie, (err, results) => {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      res.sendStatus(201);
+    }
+  });
 });
 
 app.post("/delete", function(req, res) {
   //remove movie from favorites into the database
+  deleteFavorite(req.body.movie, (err, results) => {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      res.sendStatus(201);
+    }
+  })
 });
 
 //***********************************************************************************************************************
@@ -61,11 +92,6 @@ app.post("/delete", function(req, res) {
 
 //IF you decide to go with this OPTION 2, delete OPTION 1 to continue
 
-//Routes
-const movieRoutes = require("./routes/movieRoutes.js");
-
-//Use routes
-app.use("/movies", movieRoutes);
 
 app.listen(3000, function() {
   console.log("listening on port 3000!");
