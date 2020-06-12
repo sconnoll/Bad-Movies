@@ -54,9 +54,10 @@ app.get("/genres", function(req, res) {
 
 app.get("/search", function(req, res) {
   // and sort them by votes (worst first) using the search parameters in themoviedb API
-  getMovies(req.body.genre)
+  console.log('here is the request params', req.query.genre);
+  getMovies(req.query.genre)
     .then((results) => {
-      res.status(201).send({ data });
+      res.status(201).send(results.data);
     })
     .catch((err) => {
       console.log(err);
