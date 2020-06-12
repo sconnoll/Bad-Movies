@@ -55,7 +55,7 @@ class Search extends React.Component {
         </select>
         <br/><br/>
 
-        <button onClick={(e) => this.props.handleClick(e)}>Search</button>
+        {/* <button onClick={(e) => this.props.handleClick(e)}>Search</button> */}
 
       </div>
     );

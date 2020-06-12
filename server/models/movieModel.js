@@ -8,8 +8,8 @@ const db = require('../../db/sql');
 module.exports = {
 
   createFavorite: function(movie, handleResults) {
-    var params = [movie.title, movie.vote_count, movie.overview];
-    db.query(`INSERT INTO favorites (title, rating, overview) VALUES (?)`, [...params], handleResults);
+    var params = [movie.title, movie.vote_count, movie.overview, movie.release_date];
+    db.query(`INSERT INTO favorites (title, rating, overview, release) VALUES (?)`, [...params], handleResults);
   },
 
   deleteFavorite: function(movie, handleResults) {

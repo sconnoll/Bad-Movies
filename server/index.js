@@ -67,7 +67,8 @@ app.get("/search", function(req, res) {
 
 app.post("/save", function(req, res) {
   //save movie as favorite into the database
-  createFavorite(req.body.movie, (err, results) => {
+  console.log(req.params);
+  createFavorite(req.params, (err, results) => {
     if (err) {
       res.sendStatus(500);
     } else {

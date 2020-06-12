@@ -18,7 +18,8 @@ class App extends React.Component {
     this.saveMovie = this.saveMovie.bind(this);
     this.deleteMovie = this.deleteMovie.bind(this);
     this.swapFavorites = this.swapFavorites.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    // this.handleClick = this.handleClick.bind(this);
+    this.getMovieDetails = this.getMovieDetails.bind(this);
   }
 
   getMovies(genreId) {
@@ -26,19 +27,43 @@ class App extends React.Component {
     console.log('this is what we are passing into getMovies as the genre', genreId);
     axios.get(`/search?genre=${genreId}`)
       .then(results => {
-        console.log(results);
+        console.log(results.data.results);
         this.setState({
           movies: results.data.results
         })
       })
   }
 
-  saveMovie() {
-    // same as above but do something diff
-    return axios.post('/save')
+  getMovieDetails(movieTitle) {
+    for (i = 0; i < this.state.movies.length; i++) {
+      if (this.state.movies[i].title === movieTitle) {
+        console.log('here is the movie object we want to pass into saveMovie', this.state.movies[i]);
+        return this.state.movies[i];
+      }
+    }
   }
 
-  deleteMovie() {
+  saveMovie(movieTitle) {
+    // same as above but do something diff
+    var movieObj = getMovieDetails(movieTitle);
+    axios.post('/save', {
+      title: movieObj.title, 
+      vote_count: movieObj.vote_count, 
+      overview: movieObj.overview, 
+      release_date: movieObj.release_date
+    })
+      .then(() => {
+        var temp = this.state.favorites;
+        this.setState({
+          favorites: temp.push(movieObj)
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  deleteMovie(movie) {
     // same as above but do something diff
     return axios.post('/delete')
   }
@@ -50,11 +75,11 @@ class App extends React.Component {
     });
   }
 
-  handleClick(e) {
-    this.setState({
-
-    });
-  }
+  // handleClick(e) {
+  //   this.setState({
+  //     movies
+  //   });
+  // }
 
   render () {
   	return (
@@ -62,7 +87,7 @@ class App extends React.Component {
         <header className="navbar"><h1>Bad Movies</h1></header> 
         
         <div className="main">
-          <Search swapFavorites={this.swapFavorites} showFaves={this.state.showFaves} handleClick={this.handleClick} getMovies={this.getMovies}/>
+          <Search swapFavorites={this.swapFavorites} showFaves={this.state.showFaves} getMovies={this.getMovies}/>
           <Movies movies={this.state.showFaves ? this.state.favorites : this.state.movies} showFaves={this.state.showFaves}/>
         </div>
       </div>
