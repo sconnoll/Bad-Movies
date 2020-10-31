@@ -1,5 +1,5 @@
 import React from 'react';
-import MovieEntry from 'MovieEntry.jsx';
+import MovieEntry from './MovieEntry.jsx';
 
 class Movies extends React.Component {
   constructor(props) {
@@ -20,7 +20,7 @@ class Movies extends React.Component {
     return (
       <ul className="movies">
         {this.props.movies.map((movie) => (
-          <MovieEntry movie={movie}/>
+          <MovieEntry movie={movie} handleClick={this.props.handleClick}/>
         ))}
       </ul>
     );

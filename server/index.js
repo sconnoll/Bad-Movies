@@ -2,7 +2,6 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var db = require(".././db/sql/index.js");
 var { createFavorite, deleteFavorite } = require("./models/movieModel.js");
-var { getGenres, getMovies } = require("./helpers/apiHelpers.js");
 var request = require("request");
 var app = express();
 
@@ -10,7 +9,7 @@ var app = express();
 // https://www.themoviedb.org/account/signup
 
 //Helpers
-var apiHelpers = require("./helpers/apiHelpers.js");
+var { getGenres, getMovies } = require("./helpers/apiHelpers.js");
 
 //Middleware
 app.use(bodyParser.json());
@@ -54,7 +53,6 @@ app.get("/genres", function(req, res) {
 
 app.get("/search", function(req, res) {
   // and sort them by votes (worst first) using the search parameters in themoviedb API
-  console.log('here is the request params', req.query.genre);
   getMovies(req.query.genre)
     .then((results) => {
       res.status(201).send(results.data);
@@ -67,11 +65,13 @@ app.get("/search", function(req, res) {
 
 app.post("/save", function(req, res) {
   //save movie as favorite into the database
-  console.log(req.params);
-  createFavorite(req.params, (err, results) => {
+  console.log('here is the request body', req.body);
+  createFavorite(req.body, (err, results) => {
     if (err) {
+      console.log('this is the error when trying to post a favorite movie', err);
       res.sendStatus(500);
     } else {
+      console.log('these are the results of the post to db', results);
       res.sendStatus(201);
     }
   });
